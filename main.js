@@ -1,91 +1,121 @@
+// main.js - Load and Visualize Physiological Data with 5-Minute Aggregation
+
 document.addEventListener("DOMContentLoaded", function () {
-    const ctx = document.getElementById('dataChart').getContext('2d');
-    let chart;
+    const ctxTemp = document.getElementById('tempChart').getContext('2d');
+    const ctxEda = document.getElementById('edaChart').getContext('2d');
+    const ctxHr = document.getElementById('hrChart').getContext('2d');
+    let charts = {};
+    const gradeBox = document.createElement('div');
+    gradeBox.id = 'gradeBox';
+    gradeBox.style.position = 'absolute';
+    gradeBox.style.top = '10px';
+    gradeBox.style.right = '10px';
+    gradeBox.style.padding = '10px';
+    gradeBox.style.backgroundColor = '#fff';
+    gradeBox.style.border = '1px solid #000';
+    gradeBox.style.borderRadius = '5px';
+    gradeBox.style.fontSize = '16px';
+    gradeBox.style.fontWeight = 'bold';
+    document.body.appendChild(gradeBox);
 
-    // Ensure Chart.js and date adapter are properly included
-    import("https://cdn.jsdelivr.net/npm/chart.js");
-    import("https://cdn.jsdelivr.net/npm/moment");
-    import("https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns");
+    const grades = {
+        'Midterm1': { 'S1': 78, 'S2': 82, 'S3': 77, 'S4': 75, 'S5': 67, 'S6': 71, 'S7': 64, 'S8': 92, 'S9': 80, 'S10': 89 },
+        'Midterm2': { 'S1': 82, 'S2': 85, 'S3': 90, 'S4': 77, 'S5': 77, 'S6': 64, 'S7': 33, 'S8': 88, 'S9': 39, 'S10': 64 },
+        'Final': { 'S1': 182, 'S2': 180, 'S3': 188, 'S4': 149, 'S5': 157, 'S6': 175, 'S7': 110, 'S8': 184, 'S9': 126, 'S10': 116 }
+    };
 
-    // Function to fetch and process CSV files
-    async function loadData(file) {
+    document.getElementById('studentSelect').addEventListener('change', updateAllCharts);
+    document.getElementById('examSelect').addEventListener('change', updateAllCharts);
+
+    async function loadData(student, exam, dataType) {
         try {
-            console.log(`Loading file: ${file}`); // Debugging output
-            const response = await fetch(file);
-            if (!response.ok) throw new Error(`Failed to load ${file}`);
+            const filePath = `${student}/${exam}/${dataType}.csv`;
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error(`Failed to load ${filePath}`);
 
             const text = await response.text();
-            console.log(`File contents:\n${text.substring(0, 200)}`); // Debugging output
-
             const rows = text.trim().split("\n");
+            if (rows.length < 3) throw new Error("Invalid file format");
 
-            // Read metadata: first row = initial timestamp, second row = sample rate
-            const startTime = parseInt(rows[0]) * 1000; // Convert UNIX timestamp to milliseconds
+            const startTime = parseInt(rows[0]) * 1000;
             const sampleRate = parseFloat(rows[1]);
+            const duration = exam.includes("Final") ? 180 * 60 * 1000 : 90 * 60 * 1000;
+            const maxTime = startTime + duration;
+            const interval = 5 * 60 * 1000; // 5-minute intervals
 
-            // Set a 3-hour (180 minutes) limit
-            const maxTime = startTime + 180 * 60 * 1000; 
+            let aggregatedData = [];
+            let tempSum = 0, count = 0;
+            let currentInterval = startTime;
 
-            // Process data rows into time-series format within the 3-hour limit
-            const data = rows.slice(2).map((val, index) => {
+            rows.slice(2).forEach((val, index) => {
                 const timestamp = startTime + index * (1000 / sampleRate);
-                if (timestamp > maxTime) return null; // Ignore data beyond 3 hours
-                return { x: new Date(timestamp), y: parseFloat(val) };
-            }).filter(point => point !== null); // Remove null values
+                if (timestamp > maxTime) return;
 
-            console.log("Processed Data:", data.slice(0, 5)); // Debugging output
-            return data;
+                if (timestamp >= currentInterval + interval) {
+                    if (count > 0) {
+                        aggregatedData.push({ x: new Date(currentInterval), y: tempSum / count });
+                    }
+                    currentInterval += interval;
+                    tempSum = 0;
+                    count = 0;
+                }
+                tempSum += parseFloat(val);
+                count++;
+            });
+
+            if (count > 0) {
+                aggregatedData.push({ x: new Date(currentInterval), y: tempSum / count });
+            }
+
+            return aggregatedData;
         } catch (error) {
             console.error("Error loading data:", error);
             return [];
         }
     }
 
-    // Function to update chart based on selected data
-    async function updateChart(selectedData) {
-        let file;
-        if (selectedData === "temp") file = "TEMP.csv";
-        else if (selectedData === "eda") file = "EDA.csv";
-        else if (selectedData === "hr") file = "HR.csv";
+    async function createChart(ctx, label, student, exam, dataType, color) {
+        const data = await loadData(student, exam, dataType);
 
-        const data = await loadData(file);
+        if (charts[label]) charts[label].destroy();
 
-        // Properly destroy the previous chart before creating a new one
-        if (chart) {
-            chart.destroy();
-            chart = null;
-        }
-
-        chart = new Chart(ctx, {
+        charts[label] = new Chart(ctx, {
             type: 'line',
             data: {
                 datasets: [{
-                    label: selectedData.toUpperCase(),
+                    label: label,
                     data: data,
-                    borderColor: selectedData === "temp" ? "red" : selectedData === "eda" ? "blue" : "green",
+                    borderColor: color,
                     fill: false
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
-                    x: {
-                        type: 'time', // Ensure time scaling works
-                        time: { unit: 'minute' },
-                        adapters: { date: 'date-fns' }
-                    },
+                    x: { type: 'time', time: { unit: 'minute' } },
                     y: { beginAtZero: false }
                 }
             }
         });
     }
 
-    // Event listener for dropdown selection
-    document.getElementById('dataSelect').addEventListener('change', function (event) {
-        updateChart(event.target.value);
-    });
+    function updateGradeBox(student, exam) {
+        const grade = grades[exam]?.[student] ?? 'N/A';
+        gradeBox.innerHTML = `Grade for ${exam}: ${grade}`;
+    }
 
-    updateChart("temp"); // Default selection on page load
+    async function updateAllCharts() {
+        const student = document.getElementById('studentSelect').value;
+        const exam = document.getElementById('examSelect').value;
+        createChart(ctxTemp, "Temperature", student, exam, "TEMP", "red");
+        createChart(ctxEda, "Electrodermal Activity", student, exam, "EDA", "blue");
+        createChart(ctxHr, "Heart Rate", student, exam, "HR", "green");
+        updateGradeBox(student, exam);
+    }
+
+    updateAllCharts();
 });
+
+
 
 

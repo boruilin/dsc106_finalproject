@@ -5,20 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Physiological Data Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Physiological Data Dashboard</h2>
+    <div class="dashboard">
+        <h2>Physiological Data Dashboard</h2>
+        <div class="selectors">
+            <label for="studentSelect">Select Student:</label>
+            <select id="studentSelect">
+                <option value="S1">S1</option>
+                <option value="S2">S2</option>
+                <option value="S3">S3</option>
+                <option value="S4">S4</option>
+                <option value="S5">S5</option>
+                <option value="S6">S6</option>
+                <option value="S7">S7</option>
+                <option value="S8">S8</option>
+                <option value="S9">S9</option>
+                <option value="S10">S10</option>
+            </select>
 
-    <label for="dataSelect">Select Data Type:</label>
-    <select id="dataSelect">
-        <option value="temp">Temperature (°C)</option>
-        <option value="eda">Electrodermal Activity (μS)</option>
-        <option value="hr">Heart Rate (BPM)</option>
-    </select>
+            <label for="examSelect">Select Exam:</label>
+            <select id="examSelect">
+                <option value="Midterm1">Midterm 1</option>
+                <option value="Midterm2">Midterm 2</option>
+                <option value="Final">Final</option>
+            </select>
+        </div>
 
-    <canvas id="dataChart"></canvas>
+    
 
-    <script src="main.js"></script> <!-- Importing main.js -->
+        <div class="chart-container">
+            <div class="chart-box">
+                <h3>Temperature (°C)</h3>
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Electrodermal Activity (μS)</h3>
+                <canvas id="edaChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Heart Rate (BPM)</h3>
+                <canvas id="hrChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
 </body>
 </html>
-
