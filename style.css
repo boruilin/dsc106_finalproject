@@ -1,12 +1,12 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
     background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
-}
-
-.dashboard {
+    text-align: center;
+  }
+  
+  .dashboard {
     max-width: 1200px;
     margin: auto;
     background: white;
@@ -14,15 +14,20 @@ body {
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     position: relative;
-}
-
-.chart-container {
+  }
+  
+  .selectors,
+  .slider-container {
+    margin-bottom: 20px;
+  }
+  
+  .chart-container {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-}
-
-.chart-box {
+  }
+  
+  .chart-box {
     width: 30%;
     min-width: 300px;
     background: #fff;
@@ -30,17 +35,89 @@ body {
     border-radius: 8px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
     margin: 10px;
-}
-
-#gradeBox {
+  }
+  
+  canvas#edaChart {
+    filter: drop-shadow(0 0 6px #00ffff);
+  }
+  
+  .thermometer {
+    height: 200px;
+    width: 30px;
+    background: #ddd;
+    border-radius: 15px;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #999;
+  }
+  
+  .thermo-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to top, #00f, #ffa500, #f00);
+    height: 0%;
+    transition: height 0.4s ease-in-out;
+  }
+  
+  .thermo-label {
+    margin-top: 8px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .heart-display {
+    position: relative;
+    text-align: center;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .heart-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  #heartIcon {
+    font-size: 140px; /* Bigger heart */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  #heartValue {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 0.4em; /* Smaller text */
+    color: white;
+    text-shadow: 0 0 4px black;
+    pointer-events: none;
+  }
+  
+  .stats-box {
+    margin-top: 10px;
+    background-color: #f2f2f2;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    text-align: left;
+  }
+  
+  /* Grade box styling */
+  #gradeBox {
     position: absolute;
     top: 10px;
     right: 10px;
-    padding: 10px;
+    padding: 14px;
     background-color: #fff;
     border: 2px solid #000;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: bold;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-}
+    z-index: 999;
+  }
+  
