@@ -79,16 +79,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (charts[label]) charts[label].destroy();
 
+        
+        if (charts[label]) charts[label].destroy();
+
+        const dataset = {
+            label: label,
+            data: data,
+            borderColor: color,
+            pointRadius: label === "Electrodermal Activity" ? 4 : 0,
+            pointBackgroundColor: label === "Electrodermal Activity" ? "#00ffff" : color,
+            pointHoverRadius: label === "Electrodermal Activity" ? 6 : 0,
+            borderWidth: label === "Heart Rate" ? 3 : 2,
+            tension: label === "Heart Rate" ? 0.1 : 0.4,
+            fill: label === "Temperature",
+            backgroundColor: function(context) {
+                if (label !== "Temperature") return null;
+                const chart = context.chart;
+                const {ctx, chartArea} = chart;
+                if (!chartArea) return null;
+                const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                gradient.addColorStop(0, 'rgba(30,144,255,0.2)');
+                gradient.addColorStop(0.5, 'rgba(255,165,0,0.3)');
+                gradient.addColorStop(1, 'rgba(255,0,0,0.4)');
+                return gradient;
+            }
+        };
+
         charts[label] = new Chart(ctx, {
             type: 'line',
-            data: {
-                datasets: [{
-                    label: label,
-                    data: data,
-                    borderColor: color,
-                    fill: false
-                }]
-            },
+            data: { datasets: [dataset] },
             options: {
                 responsive: true,
                 scales: {
@@ -97,6 +116,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
+
+        if (label === "Heart Rate" && data.length > 0) {
+            const bpm = data[data.length - 1].y;
+            const heart = document.getElementById('heartIcon');
+            if (heart) {
+                const scale = 1 + Math.min((bpm - 60) / 60, 1);
+                heart.style.transform = `scale(${scale})`;
+                heart.style.transition = 'transform 0.3s ease-in-out';
+            }
+        }
+
     }
 
     function updateGradeBox(student, exam) {

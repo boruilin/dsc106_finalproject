@@ -8,6 +8,19 @@
     <script src="https://cdn.jsdelivr.net/npm/moment"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Optional glow effect for EDA chart */
+        canvas#edaChart {
+            filter: drop-shadow(0 0 4px #00ffff);
+        }
+
+        /* Animated heart effect */
+        #heartIcon {
+            display: inline-block;
+            transition: transform 0.3s ease-in-out;
+            margin-left: 8px;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard">
@@ -35,8 +48,6 @@
             </select>
         </div>
 
-    
-
         <div class="chart-container">
             <div class="chart-box">
                 <h3>Temperature (°C)</h3>
@@ -47,7 +58,7 @@
                 <canvas id="edaChart"></canvas>
             </div>
             <div class="chart-box">
-                <h3>Heart Rate (BPM)</h3>
+                <h3>Heart Rate (BPM) <span id="heartIcon">❤️</span></h3>
                 <canvas id="hrChart"></canvas>
             </div>
         </div>
@@ -56,3 +67,4 @@
     <script src="main.js"></script>
 </body>
 </html>
+
