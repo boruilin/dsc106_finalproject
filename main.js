@@ -69,47 +69,78 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateGradeBox(student, exam) {
-    const grade = grades[exam]?.[student] ?? 'N/A';
-    gradeBox.innerHTML = `Grade for ${exam}: ${grade}`;
+    if (student === 'ALL') {
+      const examGrades = grades[exam];
+      const values = Object.values(examGrades).map(score => {
+        const [num, denom] = score.split('/').map(Number);
+        return (num / denom) * 100;
+      });
+      const avg = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2);
+      gradeBox.innerHTML = `Average Grade for ${exam}: ${avg}%`;
+    } else {
+      const grade = grades[exam]?.[student] ?? 'N/A';
+      gradeBox.innerHTML = `Grade for ${exam}: ${grade}`;
+    }
   }
+  
 
   async function loadData(student, exam, type) {
-    const path = `${student}/${exam}/${type}.csv`;
-    const response = await fetch(path);
-    const text = await response.text();
-    const lines = text.trim().split('\n');
-    const startTime = parseInt(lines[0]) * 1000;
-    const sampleRate = parseFloat(lines[1]);
-    const values = lines.slice(2).map(Number);
-
     const duration = exam === 'Final' ? 180 * 60 * 1000 : 90 * 60 * 1000;
-    const maxTime = startTime + duration;
     const interval = 60 * 1000; // 1-minute buckets
-
-    let aggregated = [];
-    let sum = 0, count = 0, bucketStart = startTime;
-
-    for (let i = 0; i < values.length; i++) {
-      const timestamp = startTime + i * (1000 / sampleRate);
-      if (timestamp > maxTime) break;
-
-      if (timestamp >= bucketStart + interval) {
-        aggregated.push(sum / count);
-        sum = 0;
-        count = 0;
-        bucketStart += interval;
+    const studentIds = Object.keys(grades[exam]);
+  
+    async function loadSingleStudent(id) {
+      const path = `${id}/${exam}/${type}.csv`;
+      const response = await fetch(path);
+      const text = await response.text();
+      const lines = text.trim().split('\n');
+      const startTime = parseInt(lines[0]) * 1000;
+      const sampleRate = parseFloat(lines[1]);
+      const values = lines.slice(2).map(Number);
+  
+      let aggregated = [];
+      let sum = 0, count = 0, bucketStart = startTime;
+  
+      for (let i = 0; i < values.length; i++) {
+        const timestamp = startTime + i * (1000 / sampleRate);
+        if (timestamp > startTime + duration) break;
+  
+        if (timestamp >= bucketStart + interval) {
+          aggregated.push(sum / count);
+          sum = 0;
+          count = 0;
+          bucketStart += interval;
+        }
+  
+        sum += values[i];
+        count++;
       }
-
-      sum += values[i];
-      count++;
+  
+      if (count > 0) aggregated.push(sum / count);
+      return aggregated;
     }
-
-    if (count > 0) {
-      aggregated.push(sum / count);
+  
+    if (student === 'ALL') {
+      const allData = await Promise.all(studentIds.map(id => loadSingleStudent(id)));
+      const maxLen = Math.max(...allData.map(d => d.length));
+      let avgData = [];
+  
+      for (let i = 0; i < maxLen; i++) {
+        let sum = 0, n = 0;
+        for (let d of allData) {
+          if (i < d.length && !isNaN(d[i])) {
+            sum += d[i];
+            n++;
+          }
+        }
+        avgData.push(n ? sum / n : 0);
+      }
+      return avgData;
+    } else {
+      return await loadSingleStudent(student);
     }
-
-    return aggregated;
   }
+  
 
   function renderLineTrend(canvasId, label, data, color) {
     const ctx = document.getElementById(canvasId).getContext('2d');
