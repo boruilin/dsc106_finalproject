@@ -198,7 +198,9 @@ options: {
 
     const temp = tempData[i];
     thermoFill.style.height = Math.min(Math.max((temp - 22) / 10 * 100, 0), 100) + '%';
-    document.getElementById('tempTooltip').textContent = `${temp.toFixed(2)} °C`;
+    const tempF = (temp * 9/5 + 32).toFixed(2);
+document.getElementById('tempTooltip').textContent = `${temp.toFixed(2)} °C / ${tempF} °F`;
+
 
     const hr = hrData[i];
     const scale = 1 + Math.min((hr - 60) / 60, 1);
