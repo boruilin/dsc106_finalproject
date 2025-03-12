@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Your Heart Races During Exams</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    section {
+      padding: 100px 10%;
+      max-width: 900px;
+      margin: auto;
+    }
+    .graphic {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .scroll-step {
+      opacity: 0.2;
+      transition: opacity 0.4s ease-in-out;
+    }
+    .scroll-step.active {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Why Your Heart Races During Exams</h1>
+    <p>A scroll-based exploration of real student stress data</p>
+  </header>
+
+  <section class="scroll-step">
+    <h2>The Pulse of Pressure</h2>
+    <p>During exams, students wore biometric sensors to track heart rate, sweat response, and temperature.</p>
+    <div class="graphic heart-display">
+      <span id="heartIcon">❤️</span>
+      <div id="heartValue">--</div>
+    </div>
+  </section>
+
+  <section class="scroll-step">
+    <h2>Stress Runs Hot</h2>
+    <p>Temperature changes reflect arousal and tension. A rising thermometer tells its own story.</p>
+    <div class="graphic thermometer">
+      <div class="thermo-fill" id="thermoFill"></div>
+    </div>
+    <div class="thermo-label" id="tempTooltip">-- °C</div>
+  </section>
+
+  <section class="scroll-step">
+    <h2>Try It Yourself</h2>
+    <p>Input your exam metrics below and see your predicted stress score.</p>
+    <form id="predict-form">
+      <input type="number" id="hr" placeholder="Heart Rate (bpm)" required />
+      <input type="number" id="eda" placeholder="EDA (μS)" required />
+      <input type="number" id="temp" placeholder="Temperature (°C)" required />
+      <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <section class="scroll-step">
+    <h2>Want to Dive Deeper?</h2>
+    <p>Explore a fully interactive dashboard with synced visuals, live sliders, and more.</p>
+    <a href="index.html">Go to Full Dashboard →</a>
+  </section>
+
+  <script src="story.js"></script>
+</body>
+</html>
