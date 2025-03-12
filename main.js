@@ -253,6 +253,35 @@ renderLineTrend("hrTrend", "Heart Rate", hrData.slice(0, i + 1), "green", exam);
   timeSlider.addEventListener('input', updateCharts);
 
   adjustSliderRange();
+
+  // === ADD THIS BELOW ===
+  let runInterval = null;
+
+  document.getElementById('runButton').addEventListener('click', () => {
+    const runBtn = document.getElementById('runButton');
+    const max = parseInt(timeSlider.max);
+    let current = parseInt(timeSlider.value);
+
+    if (runInterval) {
+      clearInterval(runInterval);
+      runInterval = null;
+      runBtn.textContent = '▶ Run';
+    } else {
+      runBtn.textContent = '⏸ Pause';
+      runInterval = setInterval(() => {
+        if (current >= max) {
+          clearInterval(runInterval);
+          runInterval = null;
+          runBtn.textContent = '▶ Run';
+          return;
+        }
+        current++;
+        timeSlider.value = current;
+        updateCharts();
+      }, 400); // adjust speed here
+    }
+  });
 });
+
   
   
