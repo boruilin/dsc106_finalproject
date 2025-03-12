@@ -2,188 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Physiological Data Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Your Heart Races During Exams</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    .thermometer {
-      height: 300px;
-      width: 40px;
-      background: #ddd;
-      border-radius: 20px;
+    section {
+      padding: 100px 10%;
+      max-width: 900px;
       margin: auto;
-      position: relative;
-      overflow: hidden;
-      border: 2px solid #999;
     }
-
-    .thermo-fill {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: linear-gradient(to top, #0000ff, #ffa500, #ff0000);
-      height: 0%;
-      transition: height 0.4s ease-in-out;
-    }
-
-    .thermo-label {
-      margin-top: 8px;
-      font-weight: bold;
+    .graphic {
       text-align: center;
+      margin-top: 40px;
     }
-
-    .heart-display {
-      position: relative;
-      text-align: center;
-      height: 200px;
+    .scroll-step {
+      opacity: 0.2;
+      transition: opacity 0.4s ease-in-out;
     }
-
-    #heartIcon {
-      font-size: 100px;
-      display: inline-block;
-      transition: transform 0.3s ease-in-out;
-      position: relative;
-    }
-
-    #heartValue {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-weight: bold;
-      font-size: 1.4em;
-      color: white;
-      text-shadow: 0 0 4px black;
-      pointer-events: none;
-    }
-
-    .stats-box {
-      background-color: #f2f2f2;
-      padding: 8px;
-      border-radius: 6px;
-      font-size: 0.9em;
-      margin-top: 10px;
-      text-align: left;
-    }
-
-    .chart-box {
-      width: 30%;
-      padding: 10px;
-    }
-
-    .chart-container {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-
-    .trend-container {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 30px;
-    }
-
-    .trend-box {
-      width: 30%;
-      min-width: 300px;
-      padding: 10px;
-    }
-
-    .selectors {
-      margin-bottom: 15px;
-    }
-
-    .slider-container {
-      text-align: center;
-      margin: 20px 0;
+    .scroll-step.active {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
-  <div class="dashboard">
-    <h2>Stress Signals: What Your Body Says During Exams</h2>
+  <header>
+    <h1>Why Your Heart Races During Exams</h1>
+    <p>A scroll-based exploration of real student stress data</p>
+  </header>
 
-    <div class="selectors">
-      <label for="studentSelect">Select Student:</label>
-      <select id="studentSelect">
-        <option value="ALL">All Students</option>
-        <option value="S1">S1</option>
-        <option value="S2">S2</option>
-        <option value="S3">S3</option>
-        <option value="S4">S4</option>
-        <option value="S5">S5</option>
-        <option value="S6">S6</option>
-        <option value="S7">S7</option>
-        <option value="S8">S8</option>
-        <option value="S9">S9</option>
-        <option value="S10">S10</option>
-      </select>
-
-      <label for="examSelect">Select Exam:</label>
-      <select id="examSelect">
-        <option value="Midterm1">Midterm 1</option>
-        <option value="Midterm2">Midterm 2</option>
-        <option value="Final">Final</option>
-      </select>
+  <section class="scroll-step">
+    <h2>The Pulse of Pressure</h2>
+    <p>During exams, students wore biometric sensors to track heart rate, sweat response, and temperature.</p>
+    <div class="graphic heart-display">
+      <span id="heartIcon">❤️</span>
+      <div id="heartValue">--</div>
     </div>
+  </section>
 
-    <div class="slider-container">
-      <label id="timeLabel" for="timeSlider">Time: 9:00 AM</label><br/>
-      <input type="range" id="timeSlider" min="0" max="90" value="0" step="1"/>
-      <br/>
-      <button id="runButton">▶ Run</button>
+  <section class="scroll-step">
+    <h2>Stress Runs Hot</h2>
+    <p>Temperature changes reflect arousal and tension. A rising thermometer tells its own story.</p>
+    <div class="graphic thermometer">
+      <div class="thermo-fill" id="thermoFill"></div>
     </div>
-    
+    <div class="thermo-label" id="tempTooltip">-- °C</div>
+  </section>
 
-    <!-- Main Visual Charts -->
-    <div class="chart-container">
-      <div class="chart-box">
-        <h3>Temperature (°C / °F)</h3>
-        <div class="thermometer">
-          <div class="thermo-fill" id="thermoFill"></div>
-        </div>
-        <div class="thermo-label" id="tempTooltip">-- °C</div>
-      </div>
+  <section class="scroll-step">
+    <h2>Try It Yourself</h2>
+    <p>Input your exam metrics below and see your predicted stress score.</p>
+    <form id="predict-form">
+      <input type="number" id="hr" placeholder="Heart Rate (bpm)" required />
+      <input type="number" id="eda" placeholder="EDA (μS)" required />
+      <input type="number" id="temp" placeholder="Temperature (°C)" required />
+      <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+  </section>
 
-      <div class="chart-box">
-        <h3>Electrodermal Activity (μS)</h3>
-        <canvas id="edaChart"></canvas>
-      </div>
+  <section class="scroll-step">
+    <h2>Want to Dive Deeper?</h2>
+    <p>Explore a fully interactive dashboard with synced visuals, live sliders, and more.</p>
+    <a href="index.html">Go to Full Dashboard →</a>
+  </section>
 
-      <div class="chart-box">
-        <h3>Heart Rate (BPM)</h3>
-        <div class="heart-display">
-          <span id="heartIcon">❤️</span>
-          <div id="heartValue">--</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Trend Plots -->
-    <div class="trend-container">
-      <div class="trend-box">
-        <h4>Temperature Trend</h4>
-        <canvas id="tempTrend"></canvas>
-        <div class="stats-box" id="tempStats"></div>
-      </div>
-      <div class="trend-box">
-        <h4>EDA Trend</h4>
-        <canvas id="edaTrend"></canvas>
-        <div class="stats-box" id="edaStats"></div>
-      </div>
-      <div class="trend-box">
-        <h4>Heart Rate Trend</h4>
-        <canvas id="hrTrend"></canvas>
-        <div class="stats-box" id="hrStats"></div>
-      </div>
-    </div>
-  </div>
-
-  <script src="main.js"></script>
+  <script src="story.js"></script>
 </body>
 </html>
-
-
-
-
