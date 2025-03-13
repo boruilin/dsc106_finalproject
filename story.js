@@ -27,7 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
       temp += (Math.random() - 0.5) * 0.2;
       const height = Math.min(Math.max((temp - 35) * 50, 0), 100);
       thermoFill.style.height = `${height}%`;
-      tempTooltip.textContent = `${temp.toFixed(2)} °C`;
+      const tempF = (temp * 9/5 + 32).toFixed(2);
+tempTooltip.textContent = `${tempF} °F`;
+
     }, 1500);
   
     // Simple prediction logic

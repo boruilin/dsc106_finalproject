@@ -1,3 +1,4 @@
+<!-- intro.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,18 @@
   <title>Why Your Heart Races During Exams</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fefefe;
+      color: #222;
+      margin: 0;
+    }
+    header {
+      background-color: #2d77ff;
+      color: white;
+      padding: 40px 10%;
+      text-align: center;
+    }
     section {
       padding: 100px 10%;
       max-width: 900px;
@@ -22,16 +35,28 @@
     .scroll-step.active {
       opacity: 1;
     }
+    a {
+      color: #2d77ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .nav {
+      text-align: center;
+      margin: 40px auto;
+    }
+    .nav a {
+      margin: 0 10px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Why Your Heart Races During Exams</h1>
+    <h1>❤️ Why Your Heart Races During Exams</h1>
     <p>A scroll-based exploration of real student stress data</p>
   </header>
 
   <section class="scroll-step">
-    <h2>The Pulse of Pressure</h2>
+    <h2>🫀 The Pulse of Pressure</h2>
     <p>During exams, students wore biometric sensors to track heart rate, sweat response, and temperature.</p>
     <div class="graphic heart-display">
       <span id="heartIcon">❤️</span>
@@ -40,32 +65,35 @@
   </section>
 
   <section class="scroll-step">
-    <h2>Stress Runs Hot</h2>
+    <h2>🌡️ Stress Runs Hot</h2>
     <p>Temperature changes reflect arousal and tension. A rising thermometer tells its own story.</p>
     <div class="graphic thermometer">
       <div class="thermo-fill" id="thermoFill"></div>
     </div>
-    <div class="thermo-label" id="tempTooltip">-- °C</div>
+    <div class="thermo-label" id="tempTooltip">-- °F</div>
   </section>
+  
+  <section class="scroll-step">
+    <h2>💧 Electrodermal Activity (EDA): Your Skin's Response to Stress</h2>
+    <p>EDA measures the electrical conductance of the skin, which varies with sweat gland activity. It's a direct indicator of psychological or physiological arousal. When you're stressed or excited, your sympathetic nervous system activates, leading to increased sweat production and, consequently, higher skin conductance.</p>
+    <div class="graphic">
+      <img src="https://media.giphy.com/media/WJ4spk7UbsUDu/giphy.gif?cid=ecf05e47a8qn2btyczi9p40s0bg0fssnbzq6m4au8g5otwwl&ep=v1_gifs_related&rid=giphy.gif&ct=g" alt="EDA Hand Pulse Animation" style="max-width: 100%; border-radius: 12px;" />
+    </div>
+  </section>
+  
 
   <section class="scroll-step">
-    <h2>Try It Yourself</h2>
-    <p>Input your exam metrics below and see your predicted stress score.</p>
-    <form id="predict-form">
-      <input type="number" id="hr" placeholder="Heart Rate (bpm)" required />
-      <input type="number" id="eda" placeholder="EDA (μS)" required />
-      <input type="number" id="temp" placeholder="Temperature (°C)" required />
-      <button type="submit">Predict</button>
-    </form>
-    <div id="result"></div>
-  </section>
-
-  <section class="scroll-step">
-    <h2>Want to Dive Deeper?</h2>
+    <h2>🔍 Want to Dive Deeper?</h2>
     <p>Explore a fully interactive dashboard with synced visuals, live sliders, and more.</p>
     <a href="index.html">Go to Full Dashboard →</a>
   </section>
 
+  <div class="nav">
+    <a href="index.html">➡️ Go to Dashboard</a>
+    <a href="survey.html">⬅️ Back to Survey</a>
+    <a href="predict.html">➡️ Try It Yourself</a>
+  </div>
   <script src="story.js"></script>
 </body>
 </html>
+

@@ -3,10 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Physiological Data Dashboard</title>
+  <title>📊 Stress Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="style.css"/>
   <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fdfdfd;
+      color: #222;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2d77ff;
+    }
+
     .thermometer {
       height: 300px;
       width: 40px;
@@ -92,97 +105,115 @@
 
     .selectors {
       margin-bottom: 15px;
+      text-align: center;
     }
 
     .slider-container {
       text-align: center;
       margin: 20px 0;
     }
+
+    .nav {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #2d77ff;
+    }
   </style>
 </head>
 <body>
-  <div class="dashboard">
-    <h2>Stress Signals: What Your Body Says During Exams</h2>
+  <h2>📊 Stress Signals: What Your Body Says During Exams</h2>
 
-    <div class="selectors">
-      <label for="studentSelect">Select Student:</label>
-      <select id="studentSelect">
-        <option value="ALL">All Students</option>
-        <option value="S1">S1</option>
-        <option value="S2">S2</option>
-        <option value="S3">S3</option>
-        <option value="S4">S4</option>
-        <option value="S5">S5</option>
-        <option value="S6">S6</option>
-        <option value="S7">S7</option>
-        <option value="S8">S8</option>
-        <option value="S9">S9</option>
-        <option value="S10">S10</option>
-      </select>
+  <div class="selectors">
+    <label for="studentSelect">Select Student:</label>
+    <select id="studentSelect">
+      <option value="ALL">All Students</option>
+      <option value="S1">S1</option>
+      <option value="S2">S2</option>
+      <option value="S3">S3</option>
+      <option value="S4">S4</option>
+      <option value="S5">S5</option>
+      <option value="S6">S6</option>
+      <option value="S7">S7</option>
+      <option value="S8">S8</option>
+      <option value="S9">S9</option>
+      <option value="S10">S10</option>
+    </select>
 
-      <label for="examSelect">Select Exam:</label>
-      <select id="examSelect">
-        <option value="Midterm1">Midterm 1</option>
-        <option value="Midterm2">Midterm 2</option>
-        <option value="Final">Final</option>
-      </select>
+    <label for="examSelect">Select Exam:</label>
+    <select id="examSelect">
+      <option value="Midterm1">Midterm 1</option>
+      <option value="Midterm2">Midterm 2</option>
+      <option value="Final">Final</option>
+    </select>
+  </div>
+
+  <div class="slider-container">
+    <label id="timeLabel" for="timeSlider">⏰ Time: 9:00 AM</label><br/>
+    <input type="range" id="timeSlider" min="0" max="90" value="0" step="1"/>
+    <br/>
+    <button id="runButton">▶ Run</button>
+  </div>
+
+  <!-- Main Visual Charts -->
+  <div class="chart-container">
+    <div class="chart-box">
+      <h3>🌡️ Temperature (°C / °F)</h3>
+      <div class="thermometer">
+        <div class="thermo-fill" id="thermoFill"></div>
+      </div>
+      <div class="thermo-label" id="tempTooltip">-- °C</div>
     </div>
 
-    <div class="slider-container">
-      <label id="timeLabel" for="timeSlider">Time: 9:00 AM</label><br/>
-      <input type="range" id="timeSlider" min="0" max="90" value="0" step="1"/>
-      <br/>
-      <button id="runButton">▶ Run</button>
-    </div>
-    
-
-    <!-- Main Visual Charts -->
-    <div class="chart-container">
-      <div class="chart-box">
-        <h3>Temperature (°C / °F)</h3>
-        <div class="thermometer">
-          <div class="thermo-fill" id="thermoFill"></div>
-        </div>
-        <div class="thermo-label" id="tempTooltip">-- °C</div>
-      </div>
-
-      <div class="chart-box">
-        <h3>Electrodermal Activity (μS)</h3>
-        <canvas id="edaChart"></canvas>
-      </div>
-
-      <div class="chart-box">
-        <h3>Heart Rate (BPM)</h3>
-        <div class="heart-display">
-          <span id="heartIcon">❤️</span>
-          <div id="heartValue">--</div>
-        </div>
-      </div>
+    <div class="chart-box">
+      <h3>💧 Electrodermal Activity (μS)</h3>
+      <canvas id="edaChart"></canvas>
     </div>
 
-    <!-- Trend Plots -->
-    <div class="trend-container">
-      <div class="trend-box">
-        <h4>Temperature Trend</h4>
-        <canvas id="tempTrend"></canvas>
-        <div class="stats-box" id="tempStats"></div>
-      </div>
-      <div class="trend-box">
-        <h4>EDA Trend</h4>
-        <canvas id="edaTrend"></canvas>
-        <div class="stats-box" id="edaStats"></div>
-      </div>
-      <div class="trend-box">
-        <h4>Heart Rate Trend</h4>
-        <canvas id="hrTrend"></canvas>
-        <div class="stats-box" id="hrStats"></div>
+    <div class="chart-box">
+      <h3>❤️ Heart Rate (BPM)</h3>
+      <div class="heart-display">
+        <span id="heartIcon">❤️</span>
+        <div id="heartValue">--</div>
       </div>
     </div>
+  </div>
+
+  <!-- Trend Plots -->
+  <div class="trend-container">
+    <div class="trend-box">
+      <h4>🌡️ Temperature Trend</h4>
+      <canvas id="tempTrend"></canvas>
+      <div class="stats-box" id="tempStats"></div>
+    </div>
+    <div class="trend-box">
+      <h4>💧 EDA Trend</h4>
+      <canvas id="edaTrend"></canvas>
+      <div class="stats-box" id="edaStats"></div>
+    </div>
+    <div class="trend-box">
+      <h4>🫀 Heart Rate Trend</h4>
+      <canvas id="hrTrend"></canvas>
+      <div class="stats-box" id="hrStats"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <a href="story.html">⬅️ Story</a>
+    <a href="predict.html">➡️ Try It Yourself</a> |
+    <a href="survey.html">🔁 Restart Survey</a>
   </div>
 
   <script src="main.js"></script>
 </body>
 </html>
+
 
 
 
