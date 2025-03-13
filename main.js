@@ -280,7 +280,7 @@ renderLineTrend("hrTrend", "Heart Rate", hrData.slice(0, i + 1), "green", exam);
         current++;
         timeSlider.value = current;
         updateCharts();
-      }, 400); // adjust speed here
+      }, 500); // adjust speed here
     }
   });
 });
