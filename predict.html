@@ -97,7 +97,7 @@
   <form id="predict-form">
     <input type="number" step="0.1" id="hr" placeholder="Average Heart Rate (BPM)" required />
     <input type="number" step="0.01" id="eda" placeholder="Average EDA (µS)" required />
-    <input type="number" step="0.1" id="temp" placeholder="Average TEMP (°C)" required />
+    <input type="number" step="0.1" id="temp" placeholder="Average TEMP (°F)" required />
     <button type="submit">Predict</button>
   </form>
 
@@ -116,31 +116,31 @@
       { student: "S6", exam: "Midterm1", HR: 91.5, EDA: 0.43, TEMP: 31.1 },
       { student: "S8", exam: "Final", HR: 87.0, EDA: 0.22, TEMP: 30.4 }
     ];
-
-    function calculatePoints(hr, eda, temp) {
+  
+    function calculatePoints(hr, eda, tempC) {
       let points = 0;
-
+  
       // HR tiers
       if (hr < 80) points += 0;
       else if (hr < 100) points += 1;
       else if (hr < 120) points += 2;
       else points += 3;
-
+  
       // EDA tiers
       if (eda < 0.2) points += 0;
       else if (eda < 0.5) points += 1;
       else if (eda < 1.0) points += 2;
       else points += 3;
-
-      // TEMP tiers
-      if (temp > 32) points += 2;
-      else if (temp >= 30) points += 1;
-      else if (temp < 28) points += 3;
+  
+      // TEMP tiers (in Celsius)
+      if (tempC > 32) points += 2;
+      else if (tempC >= 30) points += 1;
+      else if (tempC < 28) points += 3;
       else points += 2;
-
+  
       return points;
     }
-
+  
     function mapPointsToStress(points) {
       if (points <= 2) return 20 + points * 5;
       if (points <= 4) return 35 + (points - 2) * 5;
@@ -148,7 +148,7 @@
       if (points <= 8) return 65 + (points - 6) * 10;
       return 90;
     }
-
+  
     function calculateDistance(user, record) {
       return Math.sqrt(
         Math.pow(user.hr - record.HR, 2) +
@@ -156,21 +156,22 @@
         Math.pow(user.temp - record.TEMP, 2)
       );
     }
-
+  
     document.getElementById("predict-form").addEventListener("submit", function (e) {
       e.preventDefault();
-
+  
       const hr = parseFloat(document.getElementById("hr").value);
       const eda = parseFloat(document.getElementById("eda").value);
-      const temp = parseFloat(document.getElementById("temp").value);
-
-      const points = calculatePoints(hr, eda, temp);
+      const tempF = parseFloat(document.getElementById("temp").value);
+      const tempC = (tempF - 32) * 5/9;
+  
+      const points = calculatePoints(hr, eda, tempC);
       const stressScore = mapPointsToStress(points);
-
-      const userInput = { hr, eda, temp };
+  
+      const userInput = { hr, eda, temp: tempC };
       let bestMatch = null;
       let minDist = Infinity;
-
+  
       for (const record of studentData) {
         const dist = calculateDistance(userInput, record);
         if (dist < minDist) {
@@ -178,12 +179,10 @@
           bestMatch = record;
         }
       }
-
+  
       document.getElementById("result").textContent =
         `🔍 Your stress forecast: ${stressScore.toFixed(1)}%. ` +
         `Closest match: ${bestMatch.student} during ${bestMatch.exam}.`;
     });
   </script>
-</body>
-</html>
-
+  
