@@ -128,7 +128,9 @@
 </head>
 <body>
   <h2>📊 Stress Signals: What Your Body Says During Exams</h2>
-
+  <p class="intro-text">
+    Explore how ten students responded to three intense exams. Watch their physiological signals unfold over time—from nervous spikes to moments of calm. Select a student, an exam, and scroll through time to investigate!
+  </p>
   <div class="selectors">
     <label for="studentSelect">Select Student:</label>
     <select id="studentSelect">
@@ -168,11 +170,14 @@
         <div class="thermo-fill" id="thermoFill"></div>
       </div>
       <div class="thermo-label" id="tempTooltip">-- °C</div>
+      <div class="signal-message" id="tempMessage"></div>
+
     </div>
 
     <div class="chart-box">
       <h3>💧 Electrodermal Activity (μS)</h3>
       <canvas id="edaChart"></canvas>
+      <div class="signal-message" id="edaMessage"></div>
     </div>
 
     <div class="chart-box">
@@ -181,6 +186,7 @@
         <span id="heartIcon">❤️</span>
         <div id="heartValue">--</div>
       </div>
+      <div class="signal-message" id="hrMessage"></div>
     </div>
   </div>
 
@@ -202,7 +208,9 @@
       <div class="stats-box" id="hrStats"></div>
     </div>
   </div>
-
+  <div style="text-align: center; margin-top: 50px; font-size: 1.3em;">
+    <strong>Now that you’ve seen others… ready to measure your own stress?</strong>
+  </div>
   <!-- Navigation -->
   <div class="nav">
     <a href="story.html">⬅️ Story</a>

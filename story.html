@@ -1,86 +1,176 @@
-<!-- intro.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Why Your Heart Races During Exams</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>📈 What Your Body Reveals During Exams</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #fefefe;
       color: #222;
       margin: 0;
+      padding: 0;
     }
     header {
       background-color: #2d77ff;
       color: white;
-      padding: 40px 10%;
+      padding: 60px 10%;
       text-align: center;
     }
-    section {
-      padding: 100px 10%;
-      max-width: 900px;
+    header h1 {
+      font-size: 2.8em;
+      margin-bottom: 12px;
+    }
+    header p {
+      font-size: 1.3em;
+      opacity: 0.95;
+    }
+    main {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      padding: 60px 10%;
+      max-width: 1200px;
       margin: auto;
+    }
+    .story-box {
+      background: #ffffff;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 14px;
+      padding: 30px 24px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      transition: transform 0.25s ease-in-out;
+      height: 100%;
+    }
+    .story-box:hover {
+      transform: translateY(-6px);
+    }
+    .story-box h2 {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+    .story-box p {
+      font-size: 1.05em;
+      line-height: 1.6;
     }
     .graphic {
       text-align: center;
-      margin-top: 40px;
+      margin-top: 20px;
     }
-    .scroll-step {
-      opacity: 0.2;
-      transition: opacity 0.4s ease-in-out;
+    .heart-display #heartIcon {
+      font-size: 6em;
+      display: block;
     }
-    .scroll-step.active {
-      opacity: 1;
+    #heartValue {
+      font-size: 1.2em;
+      margin-top: 6px;
     }
-    a {
-      color: #2d77ff;
-      text-decoration: none;
-      font-weight: bold;
+    .thermometer {
+      width: 50px;
+      height: 250px;
+      background: #ccc;
+      margin: 20px auto;
+      border-radius: 20px;
+      position: relative;
+    }
+    .thermo-fill {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      background: linear-gradient(180deg, #2d77ff, #6db3ff);
+      transition: height 0.6s ease-in-out;
+    }
+    .thermo-label {
+      text-align: center;
+      font-size: 1.1em;
+      margin-top: 8px;
+    }
+    section.scroll-step {
+      max-width: 900px;
+      margin: 60px auto 40px;
+      padding: 0 10%;
+      text-align: center;
+    }
+    section.scroll-step h2 {
+      font-size: 1.6em;
+      margin-bottom: 16px;
+    }
+    section.scroll-step ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    section.scroll-step ul li {
+      font-size: 1.05em;
+      margin: 0;
     }
     .nav {
       text-align: center;
-      margin: 40px auto;
+      margin: 60px auto;
+      font-size: 1.1em;
     }
     .nav a {
-      margin: 0 10px;
+      margin: 0 15px;
+      color: #2d77ff;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>❤️ Why Your Heart Races During Exams</h1>
-    <p>A scroll-based exploration of real student stress data</p>
+    <h1>📈 What Your Body Reveals During Exams</h1>
+    <p>A grid-based view of real student stress stories</p>
   </header>
 
-  <section class="scroll-step">
-    <h2>🫀 The Pulse of Pressure</h2>
-    <p>During exams, students wore biometric sensors to track heart rate, sweat response, and temperature.</p>
-    <div class="graphic heart-display">
-      <span id="heartIcon">❤️</span>
-      <div id="heartValue">--</div>
+  <main>
+    <div class="story-box">
+      <h2>🫀 Albert’s Story: The Pulse of Pressure</h2>
+      <p>Albert walked into the exam feeling confident—but halfway through, his heart rate spiked. It turns out our bodies often reveal more than we think.</p>
+      <div class="graphic heart-display">
+        <span id="heartIcon">❤️</span>
+        <div id="heartValue">--</div>
+      </div>
     </div>
-  </section>
+
+    <div class="story-box">
+      <h2>⏰ Billy’s Crunch Time</h2>
+      <p>Billy prepared well, but around minute 45, his anxiety flared. His heart rate surged as the timer ticked down. This pattern is common under time pressure.</p>
+      <div class="graphic">
+        <img src="https://media1.tenor.com/m/iaBPiO40QA0AAAAC/meninggal-mati.gif" alt="Billy's heart rate spike" style="max-width: 100%; border-radius: 8px;" />
+      </div>
+    </div>
+
+    <div class="story-box">
+      <h2>🌡️ Alex’s Fatigue</h2>
+      <p>As the final exam wore on, Alex’s temperature dropped—a subtle sign of cognitive fatigue. Our sensors caught it, even before he realized it himself.</p>
+      <div class="graphic thermometer">
+        <div class="thermo-fill" id="thermoFill"></div>
+      </div>
+      <div class="thermo-label" id="tempTooltip">-- °F</div>
+    </div>
+
+    <div class="story-box">
+      <h2>💧 Edward’s EDA Spike</h2>
+      <p>Edward's palms started sweating before the exam began. Electrodermal Activity (EDA) readings showed a sharp jump in arousal as the timer started ticking.</p>
+      <div class="graphic">
+        <img src="https://media.giphy.com/media/WJ4spk7UbsUDu/giphy.gif" alt="EDA Animation" style="max-width: 100%; border-radius: 12px;" />
+      </div>
+    </div>
+  </main>
 
   <section class="scroll-step">
-    <h2>🌡️ Stress Runs Hot</h2>
-    <p>Temperature changes reflect arousal and tension. A rising thermometer tells its own story.</p>
-    <div class="graphic thermometer">
-      <div class="thermo-fill" id="thermoFill"></div>
-    </div>
-    <div class="thermo-label" id="tempTooltip">-- °F</div>
+    <h2>📊 What Do These Signals Mean?</h2>
+    <ul>
+      <li>💧 <strong>EDA</strong>: Sweat increases = stress response</li>
+      <li>❤️ <strong>Heart Rate</strong>: Higher rate = anxiety, pressure</li>
+      <li>🌡️ <strong>Temperature</strong>: Drops = fatigue, disengagement</li>
+    </ul>
   </section>
-  
-  <section class="scroll-step">
-    <h2>💧 Electrodermal Activity (EDA): Your Skin's Response to Stress</h2>
-    <p>EDA measures the electrical conductance of the skin, which varies with sweat gland activity. It's a direct indicator of psychological or physiological arousal. When you're stressed or excited, your sympathetic nervous system activates, leading to increased sweat production and, consequently, higher skin conductance.</p>
-    <div class="graphic">
-      <img src="https://media.giphy.com/media/WJ4spk7UbsUDu/giphy.gif?cid=ecf05e47a8qn2btyczi9p40s0bg0fssnbzq6m4au8g5otwwl&ep=v1_gifs_related&rid=giphy.gif&ct=g" alt="EDA Hand Pulse Animation" style="max-width: 100%; border-radius: 12px;" />
-    </div>
-  </section>
-  
 
   <section class="scroll-step">
     <h2>🔍 Want to Dive Deeper?</h2>
@@ -89,11 +179,12 @@
   </section>
 
   <div class="nav">
-    <a href="index.html">➡️ Go to Dashboard</a>
+    <a href="index.html">📊 Dashboard</a>
     <a href="survey.html">⬅️ Back to Survey</a>
-    <a href="predict.html">➡️ Try It Yourself</a>
+    <a href="predict.html">🧪 Try It Yourself</a>
   </div>
   <script src="story.js"></script>
 </body>
 </html>
+
 

@@ -1,54 +1,104 @@
-<!-- survey.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Exam Stress Survey</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      padding: 40px;
-      max-width: 600px;
+      padding: 50px 20px;
+      max-width: 700px;
       margin: auto;
       background: #f0f4ff;
       color: #333;
+      font-size: 1.15em;
     }
     h1 {
       text-align: center;
       color: #2d77ff;
+      font-size: 2.2em;
+      margin-bottom: 20px;
+    }
+    .intro {
+      text-align: center;
+      font-size: 1.2em;
+      color: #444;
+      margin-bottom: 40px;
+      line-height: 1.5;
     }
     form {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 40px;
+    }
+    .slider-block {
+      background: white;
+      border-radius: 14px;
+      padding: 25px 20px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     }
     label {
       font-weight: bold;
-      font-size: 1.1em;
+      font-size: 1.2em;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .tooltip {
+      font-size: 0.95em;
+      color: #777;
+      margin-bottom: 12px;
     }
     input[type=range] {
       width: 100%;
+      height: 24px;
+      cursor: pointer;
+    }
+    .feedback-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: -10px;
+      padding: 0 5px;
+    }
+    .feedback-bar {
+      flex-grow: 1;
+      height: 22px;
+      border-radius: 11px;
+      background: #d0d0d0;
+      overflow: hidden;
+      margin-right: 14px;
+    }
+    .feedback-fill {
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(90deg, #6db3ff, #2d77ff);
+      transition: width 0.3s ease-in-out;
+    }
+    .emoji-face {
+      font-size: 2.4em;
+      transition: transform 0.3s;
     }
     button {
-      padding: 10px;
+      padding: 16px;
       background: #2d77ff;
       color: white;
       border: none;
-      border-radius: 4px;
-      font-size: 1em;
+      border-radius: 8px;
+      font-size: 1.2em;
+      font-weight: bold;
       cursor: pointer;
     }
     button:hover {
       background: #1a5ede;
     }
     .nav {
-      margin-top: 40px;
+      margin-top: 50px;
       text-align: center;
+      font-size: 1.05em;
     }
     .nav a {
-      margin: 0 10px;
+      margin: 0 15px;
       color: #2d77ff;
       text-decoration: none;
       font-weight: bold;
@@ -56,20 +106,66 @@
   </style>
 </head>
 <body>
-  <h1>📝 Pre-Exam Stress Survey</h1>
-  <form onsubmit="event.preventDefault(); window.location.href='story.html';">
-    <label>😰 How nervous are you about your upcoming finals? <span id="nervousValue">5</span>/10</label>
-    <input type="range" min="0" max="10" value="5" id="nervous" oninput="nervousValue.textContent = this.value">
-
-    <label>📚 How prepared do you feel? <span id="preparedValue">5</span>/10</label>
-    <input type="range" min="0" max="10" value="5" id="prepared" oninput="preparedValue.textContent = this.value">
-
-    <button type="submit">Continue to Story ➡️</button>
-  </form>
-  <div class="nav">
-    <a href="index.html">➡️ Go to Dashboard</a>
-    <a href="predict.html">⬅️ Try It Yourself</a>
-    <a href="story.html">➡️ Story</a>
+  <h1>🧠 Pre-Exam Check-In</h1>
+  <div class="intro">
+    Let’s find out how you're feeling before the big test.<br />
+    Slide to reflect your mindset!
   </div>
+
+  <form onsubmit="event.preventDefault(); window.location.href='story.html';">
+    <div class="slider-block">
+      <label>😰 Nervous Level: <span id="nervousValue">5</span>/10</label>
+      <div class="tooltip">More nerves might mean higher heart rate and sweat signals.</div>
+      <input type="range" min="0" max="10" value="5" id="nervous" oninput="updateFeedback()" />
+    </div>
+
+    <div class="slider-block">
+      <label>📚 Preparedness Level: <span id="preparedValue">5</span>/10</label>
+      <div class="tooltip">Feeling prepared can help reduce physiological stress.</div>
+      <input type="range" min="0" max="10" value="5" id="prepared" oninput="updateFeedback()" />
+    </div>
+
+    <div class="feedback-section">
+      <div class="feedback-bar">
+        <div class="feedback-fill" id="barFill"></div>
+      </div>
+      <div class="emoji-face" id="emojiFace">😐</div>
+    </div>
+
+    <button type="submit">🎬 See How Others Felt</button>
+  </form>
+
+  <div class="nav">
+    <a href="index.html">📊 Dashboard</a>
+    <a href="predict.html">🧪 Try It Yourself</a>
+    <a href="story.html">📖 Story</a>
+  </div>
+
+  <script>
+    const nervous = document.getElementById('nervous');
+    const prepared = document.getElementById('prepared');
+    const barFill = document.getElementById('barFill');
+    const emojiFace = document.getElementById('emojiFace');
+
+    function updateFeedback() {
+      const nervousVal = parseInt(nervous.value);
+      const preparedVal = parseInt(prepared.value);
+
+      document.getElementById('nervousValue').textContent = nervousVal;
+      document.getElementById('preparedValue').textContent = preparedVal;
+
+      const stressScore = (nervousVal + (10 - preparedVal)) / 20;
+      const percent = Math.round(stressScore * 100);
+      barFill.style.width = percent + "%";
+
+      if (percent < 30) emojiFace.textContent = "😎";
+      else if (percent < 50) emojiFace.textContent = "🙂";
+      else if (percent < 70) emojiFace.textContent = "😬";
+      else emojiFace.textContent = "😰";
+    }
+
+    updateFeedback();
+  </script>
 </body>
 </html>
+

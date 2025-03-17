@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   gradeBox.style.padding = '10px';
   gradeBox.style.backgroundColor = '#fff';
   gradeBox.style.border = '1px solid #000';
+  
   gradeBox.style.borderRadius = '5px';
   gradeBox.style.fontSize = '16px';
   gradeBox.style.fontWeight = 'bold';
@@ -144,43 +145,76 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function renderLineTrend(canvasId, label, data, color) {
     const ctx = document.getElementById(canvasId).getContext('2d');
-    const ctxTempTrend = document.getElementById('tempTrend').getContext('2d');
-const ctxEdaTrend = document.getElementById('edaTrend').getContext('2d');
-const ctxHrTrend = document.getElementById('hrTrend').getContext('2d');
-
-if (charts[canvasId]) charts[canvasId].destroy();
-
-const start = new Date();
-start.setHours(9, 0, 0, 0);
-const labels = data.map((_, i) =>
-new Date(start.getTime() + i * 60000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
-);
-
-charts[canvasId] = new Chart(ctx, {
-type: 'line',
-data: {
-  labels: labels,
-  datasets: [{
-    label: label,
-    data: data,
-    borderColor: color,
-    backgroundColor: 'transparent',
-    tension: 0.3
-  }]
-},
-options: {
-  responsive: true,
-  animation: false,
-  scales: {
-    x: {
-      title: { display: true, text: 'Time' },
-      ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 6 }
-    },
-    y: { beginAtZero: false }
+    if (charts[canvasId]) charts[canvasId].destroy();
+  
+    const start = new Date();
+    start.setHours(9, 0, 0, 0);
+    const labels = data.map((_, i) =>
+      new Date(start.getTime() + i * 60000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+    );
+  
+    charts[canvasId] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: label,
+          data: data,
+          borderColor: color,
+          backgroundColor: 'transparent',
+          tension: 0.3,
+          pointRadius: 3,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: false,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const val = context.parsed.y;
+                const label = context.dataset.label;
+  
+                if (label === 'EDA') {
+                  if (val > 0.6) return `💧 Spike! Stress likely. (${val.toFixed(2)} μS)`;
+                }
+                if (label === 'Heart Rate') {
+                  if (val > 120) return `🫀 Sharp spike! Time pressure or panic? (${val.toFixed(0)} BPM)`;
+                  if (val > 100) return `❤️ Elevated HR — possible anxiety. (${val.toFixed(0)} BPM)`;
+                }
+                if (label === 'Temperature') {
+                  if (val < 22) return `🌡️ Dip — fatigue or disengagement? (${val.toFixed(2)} °C)`;
+                  if (val > 30) return `🔥 Hot — potential exam stress overload. (${val.toFixed(2)} °C)`;
+                }
+  
+                return `${label}: ${val.toFixed(2)}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: { display: true, text: 'Time' },
+            ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 6 }
+          },
+          y: {
+            beginAtZero: false
+          }
+        }
+      }
+    });
   }
-}
-});
-}
+  
+  // Tooltip messages based on thresholds
+const signalMessages = {
+  eda: val => val > 0.6 ? "💧 Spike! Stress likely." : "",
+  hr: val => val > 120 ? "🫀 Sharp spike! Time pressure or panic?"
+        : val > 100 ? "❤️ Elevated HR — possible anxiety." : "",
+  temp: val => val < 22 ? "🌡️ Dip — fatigue or disengagement?"
+         : val > 30 ? "🔥 Hot — potential exam stress overload" : ""
+};
 
   async function updateCharts() {
     const i = parseInt(timeSlider.value);
@@ -238,6 +272,11 @@ renderLineTrend("hrTrend", "Heart Rate", hrData.slice(0, i + 1), "green", exam);
     updateStatsBox('tempStats', tempData.slice(0, i + 1));
     updateStatsBox('hrStats', hrData.slice(0, i + 1));
     updateStatsBox('edaStats', edaData.slice(0, i + 1));
+    // Show messages below each chart
+document.getElementById("edaMessage").textContent = signalMessages.eda(edaData[i]);
+document.getElementById("hrMessage").textContent = signalMessages.hr(hr);
+document.getElementById("tempMessage").textContent = signalMessages.temp(temp);
+
   }
 
   function adjustSliderRange() {
@@ -280,7 +319,7 @@ renderLineTrend("hrTrend", "Heart Rate", hrData.slice(0, i + 1), "green", exam);
         current++;
         timeSlider.value = current;
         updateCharts();
-      }, 500); // adjust speed here
+      }, 250); // adjust speed here
     }
   });
 });

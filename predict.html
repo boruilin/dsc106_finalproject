@@ -63,17 +63,17 @@
 </head>
 <body>
   <h1>🧪 Try It Yourself</h1>
-  <p>Enter your physiological exam metrics to see your predicted stress score.</p>
+  <p>Enter the number of minutes you were in a “nervous” physiological state during an exam:</p>
   <form id="predict-form">
-    <input type="number" id="hr" placeholder="Heart Rate (bpm)" required />
-    <input type="number" id="eda" placeholder="EDA (μS)" required />
-    <input type="number" id="temp" placeholder="Temperature (°C)" required />
+    <input type="number" id="hr" placeholder="HR Nervous Minutes (>90 BPM)" required />
+    <input type="number" id="eda" placeholder="EDA Nervous Minutes (>1.5 μS)" required />
+    <input type="number" id="temp" placeholder="TEMP Nervous Minutes (<92°F)" required />
     <button type="submit">Predict</button>
   </form>
   <div id="result"></div>
 
   <div class="nav">
-    <a href="index.html">⬅️Back to Dashboard</a>
+    <a href="index.html">⬅️ Back to Dashboard</a>
     <a href="story.html">⬅️ Back to Story</a>
     <a href="survey.html">🔁 Restart Survey</a>
   </div>
@@ -81,12 +81,29 @@
   <script>
     document.getElementById("predict-form").addEventListener("submit", function (e) {
       e.preventDefault();
-      const hr = parseFloat(document.getElementById("hr").value);
+  
+      const hr = parseFloat(document.getElementById("hr").value); // nervous minutes
       const eda = parseFloat(document.getElementById("eda").value);
       const temp = parseFloat(document.getElementById("temp").value);
-      const score = ((hr - 60) * 0.4 + eda * 0.5 + (temp - 36.5) * 10).toFixed(1);
-      document.getElementById("result").textContent = `Predicted Stress Score: ${score}`;
+  
+      let predictedScore;
+  
+      // 🌳 Simplified tree-based logic
+      if (eda > 30 && hr > 40) {
+        predictedScore = 60 + (Math.random() * 5); // stressed and scattered
+      } else if (eda < 15 && hr < 20 && temp < 10) {
+        predictedScore = 85 + (Math.random() * 5); // calm and consistent
+      } else if (eda < 20 && hr < 35) {
+        predictedScore = 75 + (Math.random() * 5); // somewhat focused
+      } else {
+        predictedScore = 68 + (Math.random() * 6); // default fallback
+      }
+  
+      document.getElementById("result").textContent =
+        `🎯 Predicted Exam Score: ${predictedScore.toFixed(1)}%`;
     });
   </script>
+  
 </body>
 </html>
+
