@@ -55,13 +55,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function updateStatsBox(id, data) {
     const stats = computeStats(data);
-    document.getElementById(id).innerHTML = `
-      <strong>Mean:</strong> ${stats.mean}<br/>
-      <strong>Max:</strong> ${stats.max}<br/>
-      <strong>Min:</strong> ${stats.min}<br/>
-      <strong>Median:</strong> ${stats.median}
-    `;
+  
+    if (id === "tempStats") {
+      // Convert to Fahrenheit
+      const meanF = (stats.mean * 9/5 + 32).toFixed(2);
+      const maxF = (stats.max * 9/5 + 32).toFixed(2);
+      const minF = (stats.min * 9/5 + 32).toFixed(2);
+      const medianF = (stats.median * 9/5 + 32).toFixed(2);
+  
+      document.getElementById(id).innerHTML = `
+        <strong>Mean:</strong> ${stats.mean}°C / ${meanF}°F<br/>
+        <strong>Max:</strong> ${stats.max}°C / ${maxF}°F<br/>
+        <strong>Min:</strong> ${stats.min}°C / ${minF}°F<br/>
+        <strong>Median:</strong> ${stats.median}°C / ${medianF}°F
+      `;
+    } else if (id === "edaStats") {
+      document.getElementById(id).innerHTML = `
+        <strong>Mean:</strong> ${stats.mean} μS<br/>
+        <strong>Max:</strong> ${stats.max} μS<br/>
+        <strong>Min:</strong> ${stats.min} μS<br/>
+        <strong>Median:</strong> ${stats.median} μS
+      `;
+    } else if (id === "hrStats") {
+      document.getElementById(id).innerHTML = `
+        <strong>Mean:</strong> ${stats.mean} BPM<br/>
+        <strong>Max:</strong> ${stats.max} BPM<br/>
+        <strong>Min:</strong> ${stats.min} BPM<br/>
+        <strong>Median:</strong> ${stats.median} BPM
+      `;
+    }
   }
+  
+  
 
   function getTimeFromSlider(value) {
     const start = new Date();
