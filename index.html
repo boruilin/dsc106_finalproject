@@ -9,7 +9,7 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #fdfdfd;
+      background: #e8f0ff;
       color: #222;
       margin: 0;
       padding: 20px;
@@ -72,7 +72,7 @@
     }
 
     .stats-box {
-      background-color: #f2f2f2;
+      background-color: white;
       padding: 8px;
       border-radius: 6px;
       font-size: 0.9em;
@@ -98,20 +98,53 @@
     }
 
     .trend-box {
+      background: white;
       width: 30%;
       min-width: 300px;
       padding: 10px;
     }
 
-    .selectors {
-      margin-bottom: 15px;
-      text-align: center;
-    }
+    select {
+  font-size: 1.1em;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 0 8px;
+}
+
+/* Label font size in the selector area */
+.selectors label {
+  font-size: 1.1em;
+  margin-right: 8px;
+}
 
     .slider-container {
       text-align: center;
       margin: 20px 0;
     }
+    /* Larger slider and label */
+#timeLabel {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+#timeSlider {
+  width: 60%; /* wider slider */
+  height: 16px; /* thicker slider bar */
+  margin-top: 10px;
+  accent-color: #2d77ff;
+}
+
+/* Run button styling */
+#runButton {
+  font-size: 1em;
+  padding: 8px 14px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
 
     .nav {
       text-align: center;
